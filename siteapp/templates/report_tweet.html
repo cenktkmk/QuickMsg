@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block site-icerik %}
+
+<div>
+    <h1 class="text-center">QuickMsg</h1>
+    <h2 class="text-center">Tweet Raporla</h2>
+    <hr>
+  
+</div>  
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-dark">Gönder</button>
+</form>
+{% endblock site-icerik %}

@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+
+{% block site-icerik %}
+
+<div class="row mt-5 mb-5 justify-content-center align-items-center">
+{% for user in users %}
+
+  <div class="col-sm-12 col-md-6 mb-3 border border-2 rounded-2 ">
+    <div class="d-flex flex-row justify-content-around">
+
+      <h4>{{user.username}}</h4>
+
+      {% if user.siteuser.is_moderator %}
+      <form action="{% url 'revoke_moderator' user.username %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Unmoderator</button>
+      </form>
+      {% else %}
+
+        <form action="{% url 'grant_moderator' user.username %}" method="post">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-success">Moderator</button>
+        </form>
+
+      {% endif %}
+
+
+      {% if user.siteuser.is_active %}
+      {% else %}
+      <form action="{% url 'approve_user' user.username %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-success">Aktifleştir</button>
+      </form>
+      {% endif %}
+
+
+
+      <form action="{% url 'ban_user' user.username %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Ban</button>
+      </form>
+
+    </div>
+  </div>
+
+
+{% endfor %}
+</div>
+
+<div class="row">
+
+
+<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6">
+<h1>Raporlanan Yanıtlar</h1>
+<ul>
+  {% for reported_comment in reported_comments %}
+    <li class="">
+      <strong>Atılan Yanıt</strong> {{reported_comment.reported_comment}} <br>
+      <strong>Raporlayan:</strong> {{ reported_comment.reporter.username }}<br>
+      <strong>Nedeni:</strong> {{ reported_comment.reason }}<br>
+      <strong>Tarih:</strong> {{ reported_comment.reported_at }}
+    </li>
+
+  {% endfor %}
+</ul>
+
+</div>
+
+
+<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6">
+<h1>Raporlanan Tweetler</h1>
+<ul>
+  {% for reported_tweet in reported_tweets %}
+    <li class="">
+      <strong>Atılan Post:</strong> {{reported_tweet.reported_tweet}} <br>
+      <strong>Raporlayan:</strong> {{ reported_tweet.reporter.username }}<br>
+      <strong>Nedeni:</strong> {{ reported_tweet.reason }}<br>
+      <strong>Tarih:</strong> {{ reported_tweet.reported_at }}
+    </li>
+
+  {% endfor %}
+</ul>
+</div>
+</div>
+
+
+{% endblock site-icerik %}

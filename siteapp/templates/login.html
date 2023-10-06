@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block site-baslik %}
+Giriş Yap
+{% endblock site-baslik %}
+
+{% block site-icerik %}
+
+
+<div>
+    <h1 class="text-center">QuickMsg</h1>
+    <h2 class="text-center">Giriş Yap</h2>
+  
+    <hr>
+  
+</div>  
+<form action="{% url 'loginpage' %}" method="post">
+    {% csrf_token %}
+
+    <div class="mb-3">
+
+        <input type="text" placeholder="Kullanıcı adı" name="k_adi" required>
+    </div>
+
+
+    <div class="mb-3">
+
+        <input type="password" placeholder="Şifreniz" name="k_sifre">
+        <br>
+        <p class="mt-2">
+            Hesabın yok mu? burdan <a href="{% url 'registerpage' %}">kayıt ol</a>
+        </p>
+    </div>
+
+    
+
+    <div class="mb-3">
+        <button class="btn btn-success" type="submit">Giriş Yap</button>
+    </div>
+    
+</form>
+
+
+
+{% endblock site-icerik %}

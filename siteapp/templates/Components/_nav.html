@@ -1,0 +1,48 @@
+
+
+
+<nav class="navbar justify-content-around" style="background: transparent;">
+    <div class="container row">
+
+        <a class="navbar-brand col-1" href="{% url 'homepage' %}">QuickMsg</a>
+        <div class=" btn-group  d-md-none d-lg-none d-xxl-none d-xl-none">
+          <button type="button" class="btn btn-dark dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="visually-hidden">Toggle Dropdown</span>
+          </button>
+          <ul class="dropdown-menu">
+           <li class="dropdown-item"> <a href="{% url 'tweet' %}" class="text-decoration-none text-dark"><i class="fa-brands fa-x-twitter fa-2xl fa-bounce" style="color: #000000;"></i> Post Paylaş</a></li>
+            {% if request.user.is_authenticated %}
+            <li class="dropdown-item"><a class="text-decoration-none text-dark" href="{% url 'profilepage' request.user.username%}"><i class="fa-solid fa-2xl fa-id-badge fa-bounce" style="color: #000000;"></i> Profil</a></li>
+            <li class="dropdown-item"><a class="text-decoration-none text-dark" href="{% url 'edit-profile'  %}"><i class="fa-solid fa-2xl fa-user-pen fa-bounce" style="color: #000000;"></i> Profili Düzenle</a></li>
+            {% if request.user.is_superuser %}
+            <li class="dropdown-item"><a href="{% url 'admin_dashboard'  %}" class="text-decoration-none text-dark"><i class="fa-solid fa-screwdriver-wrench fa-2xl fa-fade" style="color: #000000;"></i> Panel</a></li>
+            {% endif %}
+            {% endif %}
+
+          </ul>
+        </div>
+            {% if request.user.is_authenticated%}
+            <a href="{% url 'tweet' %}" class="navbar-brand d-none d-md-block d-lg-block d-xl-block d-xxl-block col-1 text-decoration-none"><i class="fa-brands fa-x-twitter fa-2xl fa-bounce" style="color: #000000;"></i></a>
+            <a class="navbar-brand d-none d-md-block d-lg-block d-xl-block d-xxl-block col-1" href="{% url 'profilepage' request.user.username%}"><i class="fa-solid fa-2xl fa-id-badge fa-bounce" style="color: #000000;"></i></a>
+            <a class="navbar-brand d-none d-md-block d-lg-block d-xl-block d-xxl-block col-1 text-decoration-none" href="{% url 'edit-profile'  %}"><i class="fa-solid fa-2xl fa-user-pen fa-bounce" style="color: #000000;"></i></a>
+            <a class="navbar-brand col-1" href="{% url 'logoutpage' %}">Çıkış Yap</a>
+            {% if request.user.is_superuser %}
+            <a href="{% url 'admin_dashboard'  %}" class="navbar-brand d-none d-md-block d-lg-block d-xl-block d-xxl-block col-1 text-decoration-none"><i class="fa-solid fa-screwdriver-wrench fa-2xl fa-fade" style="color: #000000;"></i></a>
+            {% endif %}
+            {% else %}
+            <a class="navbar-brand col-1" href="{% url 'loginpage' %}">Giriş Yap</a></li>
+            {% endif %}
+          
+        </div>
+
+        
+          
+
+         
+    </div>
+    
+</nav>
+
+
+
+

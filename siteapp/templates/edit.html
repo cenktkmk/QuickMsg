@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+
+
+{% block site-icerik %}
+
+
+<div>
+    <h1 class="text-center">QuickMsg</h1>
+    <h2 class="text-center">Profili Düzenle</h2>
+    <hr>
+  
+</div>  
+
+
+
+    <form method="post" enctype="multipart/form-data">  
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button type="submit">Düzenlemeyi kaydet</button>
+    </form>
+
+
+
+
+{% endblock site-icerik %}

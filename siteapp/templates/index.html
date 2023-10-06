@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block site-icerik %}
+
+
+<div class="content row justify-content-around mt-5">
+
+  
+  {% for data in content reversed %}
+  <div class=" card text-center mb-3 col-xs-12 col-sm-12 col-md-5 col-lg-5 col-xl-5 col-xxl-5 rounded-5">
+
+      
+        
+
+    <div class="card-body">
+      <div class="post-category">
+        <div class="row">
+          <div class="col-12">
+            {% if request.user.is_authenticated %}
+            <a href="{% url 'profilepage' data.user.username %}" class="text-decoration-none">{{ data.user.username }}</a>
+            {% else %}
+            <p>{{ data.user.username }}</p>
+            {% endif %}
+
+            <p class="post-content align-items-center">" {{ data.content }} "</p>
+
+            {% if data.image %}
+            <img src="{{ data.image.url }}" alt="" class="w-75">
+            {% endif %}
+          </div>
+          <div class="col-12 mt-3">
+
+            {% if request.user.username == data.user.username or request.user.is_superuser or data.user.is_moderator%}
+            <a href="/edit-tweet/{{ data.id }}" class="btn btn-dark">Düzenle</a>
+            <a href="/post/delete/{{ data.id }}" class="btn btn-dark">Sil</a>
+            {% endif %}
+            {% if request.user.username == data.user.username %}
+            {% else %}
+            {% if request.user.is_authenticated %}
+            <a href="/report_tweet/{{data.id}}" class="btn btn-dark">Raporla</a>
+            {% endif %}
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer text-muted">
+
+      {% if request.user.is_authenticated %}
+        <a href="/create_comment/{{ data.id }}" class="text-decoration-none text-black me-3">{{data.answers}} <i class="fa-solid fa-comment fa-lg" style="color: #050505;"></i></a>
+        
+        <a href="/like-post?post_id={{ data.id }}" class="text-decoration-none text-black me-3">{{ data.like }} <i class="fa-regular fa-heart fa-lg" style="color: #0d0d0d;"></i></a>
+        {% else %}
+        <p class="me-3">{{ data.like }} <i class="fa-regular fa-heart fa-lg" style="color: #0d0d0d;"></i></p>
+      {% endif %}
+      
+      <span>{{ data.whenpublished }}</span>
+    </div>
+    <!-- Display comments related to this content item -->
+    <div class="dropdown-center dropdown">
+      <a class="btn btn-secondary dropdown-toggle mt-2 mb-2" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Yorumlar
+      </a>
+    
+      <ul class="dropdown-menu col w-100 align-items-center">
+        {% for comment in data.comments.all %}
+        <div class=" row w-100 ">
+          <div class="col-12 text-center">
+            <h1>{{ comment.user.username }}</h1>
+            <p>{{ comment.content }}</p>
+          </div>
+          {% if request.user.username == data.user.username or request.user.is_superuser or data.user.is_moderator %}
+          <div class="col-12 justify-content-center align-items-center text-center">
+            <a href="/edit-comment/{{ comment.id }}" class="btn btn-dark">Düzenle</a> 
+            <a href="/delete-comment/{{ comment.id }}" class="btn btn-dark">Sil</a>
+          </div>
+          {% endif %}
+          <div class="col-12 justify-content-center align-items-center text-center">
+            {% if request.user.is_authenticated and not request.user.username == data.user.username %}
+            <a href="/report_tweet/{{tweet.id}}" class="btn btn-dark">Raporla</a>
+            {% endif %}
+          </div>
+
+        </div>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  {% endfor %}
+
+</div>  
+{% endblock site-icerik %}

@@ -1,0 +1,197 @@
+{% extends 'base.html' %}
+
+
+{% block site-baslik %}
+QuickMsg/{{site_user.user.username}}
+{% endblock site-baslik %}
+
+{% block site-icerik %}
+
+
+
+<div>
+  <h1 class="text-center">QuickMsg/<small>{{site_user.user.username}}</small></h1>
+
+  <hr>
+
+</div>
+
+
+<div class="row " data-aos="fade-up" data-aos-anchor-placement="top-center">
+
+  
+  
+  <div class="py-5 h-100 " >
+    <div class="row d-flex justify-content-center align-items-center h-100" >
+    <div class="col col-lg-6 mb-4 mb-lg-0" >
+      <div class="card mb-3">
+        <div class="row g-0">
+          <div class="col-md-4 text-center"
+            style="border-top-left-radius: .5rem; border-bottom-left-radius: .5rem;">
+            <div>
+              <img class="img-fluid my-5 w-75 rounded" src="{{ site_user.avatar.url }}" alt="{{ site_user.user.username }}'s Avatar">
+            </div>
+            <h5 class="">{{site_user.user.username}}</h5>
+            <p class="">{{site_user.birthdate}}</p>
+            <a href="{% url 'edit-profile' %}"><i class="far fa-edit mb-5"></i></a>
+          </div>
+          <div class="col-md-8">
+            <div class="card-body p-4">
+              <h6>Bilgiler</h6>
+              <hr class="mt-0 mb-4">
+              <div class="row pt-1">
+                <div class="col-6 mb-3">
+                  <h6>Email</h6>
+                  <p class="text-muted">{{user.email}}</p>
+                </div>
+                <div class="col-6 mb-3">
+                  <h6>Şehir</h6>
+                  <p class="text-muted">{{site_user.city}}</p>
+                </div>
+              </div>
+              <div class="row pt-1">
+                <div class="col-6 mb-3">
+                  <h6>Ülke</h6>
+                  <p class="text-muted">{{site_user.country}}</p>
+                </div>
+                <div class="col-6 mb-3">
+                  <h6>Eğitim</h6>
+                  <p class="text-muted">{{site_user.education}}</p>
+                </div>
+              </div>
+              <div class="row pt1">
+                <div class="col-12 mb-3">
+                  {% if request.user.username == site_user.user.username %}
+                  <h6>Hakkımda</h6>
+                  <p class="card-text"> {{site_user.bio}}</p>
+                  {% else %}
+                  <h6>Hakkında</h6>
+                  <p class="card-text"> {{site_user.bio}}</p>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="d-flex justify-content-start">
+                {% if request.user.username == site_user.user.username %}
+                <div class="card-body">
+                  <div class="d-flex flex-row justify-content-around">
+                    
+                    <a href="{% url 'tweet' %}" class=" btn btn-dark">Share Tweet</a>
+                  </div>
+                </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+
+
+  </div>
+
+  <div class="d-flex flex-column align-items-center mt-4 mb-4">
+    {% if request.user.username == site_user.user.username %}
+    <h2 class="text-decoration-underline">Paylaşılan Tweetler</h2>
+    {% else %}
+    <h2 class="text-decoration-underline">{{site_user.user.username}} kullanıcısının tweetleri</h2>
+    {% endif %}
+  </div>
+  
+
+<div class="content row justify-content-around">
+
+  {% for tweet in user_tweets reversed %}
+  <div class="card text-center mb-3 col-xs-12 col-sm-12 col-md-5 col-lg-5 col-xl-5 col-xxl-5 rounded-5" >
+
+      
+        
+
+    <div class="card-body">
+      <div class="post-category">
+        <div class="row">
+          <div class="col-12">
+            {% if request.user.is_authenticated %}
+            <a href="{% url 'profilepage' tweet.user.username %}" class="text-decoration-none">{{ tweet.user.username }}</a>
+            {% else %}
+            <p>{{ tweet.user.username }}</p>
+            {% endif %}
+
+            <p class="post-content align-items-center">" {{ tweet.content }} "</p>
+
+            {% if tweet.image %}
+            <img src="{{ tweet.image.url }}" alt="" class="w-75">
+            {% endif %}
+          </div>
+          <div class="col-12 mt-3">
+
+            {% if request.user.username == tweet.user.username or request.user.is_superuser or tweet.user.is_moderator%}
+            <a href="/edit-tweet/{{ tweet.id }}" class="btn btn-dark">Düzenle</a>
+            <a href="/post/delete/{{ tweet.id }}" class="btn btn-dark">Sil</a>
+            {% endif %}
+
+            {% if request.user.username == tweet.user.username %}
+            {% else %}
+            {% if request.user.is_authenticated %}
+            <a href="/report_tweet/{{tweet.id}}" class="btn btn-dark">Raporla</a>
+            {% endif %}
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer text-muted">
+
+      {% if request.user.is_authenticated %}
+        <a href="/create_comment/{{ tweet.id }}" class="text-decoration-none text-black me-3">{{tweet.answers}} <i class="fa-solid fa-comment fa-lg" style="color: #050505;"></i></a>
+        
+        <a href="/like-post?post_id={{ tweet.id }}" class="text-decoration-none text-black me-3">{{ tweet.like }} <i class="fa-regular fa-heart fa-lg" style="color: #0d0d0d;"></i></a>
+        {% else %}
+        <p class="me-3">{{ tweet.like }} <i class="fa-regular fa-heart fa-lg" style="color: #0d0d0d;"></i></p>
+      {% endif %}
+      
+      <span>{{ tweet.whenpublished }}</span>
+    </div>
+    <!-- Display comments related to this content item -->
+    
+    
+    <div class="dropdown-center dropdown">
+      <a class="btn btn-secondary dropdown-toggle mt-2 mb-2" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Yorumlar
+      </a>
+    
+      <ul class="dropdown-menu col w-100 align-items-center">
+        {% for comment in tweet.comments.all %}
+        <div class=" row w-100 ">
+          <div class="col-12 text-center">
+            <h1>{{ comment.user.username }}</h1>
+            <p>{{ comment.content }}</p>
+          </div>
+          {% if request.user.username == tweet.user.username or request.user.is_superuser or tweet.user.is_moderator %}
+          <div class="col-12 justify-content-center align-items-center text-center">
+            <a href="/edit-comment/{{ comment.id }}" class="btn btn-dark">Düzenle</a> 
+            <a href="/delete-comment/{{ comment.id }}" class="btn btn-dark">Sil</a>
+          </div>
+          {% endif %}
+          <div class="col-12 justify-content-center align-items-center text-center">
+            {% if request.user.is_authenticated and not request.user.username == tweet.user.username %}
+            <a href="/report_comment/{{comment.id}}" class="btn btn-dark">Raporla</a>
+            {% else %}
+
+            {% endif %}
+
+          </div>
+          
+        </div>
+        {% endfor %}
+      </ul>
+    </div>
+    
+  </div>
+  {% endfor %}
+
+</div>
+
+{% endblock site-icerik%}

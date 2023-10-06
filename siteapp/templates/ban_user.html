@@ -1,0 +1,4 @@
+<form method="POST" action="{% url 'ban_user' user.username %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Ban User</button>
+</form>

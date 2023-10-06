@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block site-baslik %}
+    Kayıt Ol
+{% endblock site-baslik %}
+
+
+{% block site-icerik %}
+
+
+<div>
+    <h1 class="text-center">QuickMsg</h1>
+    <h2 class="text-center">Kayıt Ol</h2>
+    <hr>
+  
+</div>  
+
+
+<form class="registerForm" action="{% url 'registerpage' %}" method="post">
+    {% csrf_token %}
+
+    {{form}}
+
+    <div class="mb-3">
+        <button class="btn btn-success" type="submit">Kayıt Ol</button>
+    </div>
+    
+</form>
+
+
+
+{% endblock site-icerik %}
+
